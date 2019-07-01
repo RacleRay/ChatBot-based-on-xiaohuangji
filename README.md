@@ -4,7 +4,8 @@ A chatbot using modified seq2seq model, based on xiaohuangji corpus.
     该模型基于Seq2Seq model，在小黄鸡语料库上训练了200轮左右，经过多次调参，得到相对较好的模型。
 
 ## 模型主要的细节如下：
-    >  1. 语料按字分词，通过正则表达式清洗数据，然后导出问答对。该问答对筛选方法可应用于多轮对话问答对提取，已在电影对话数据集上实验。[更多中文对话数据集](https://github.com/candlewill/Dialog_Corpus)
+    >  1. 语料按字分词，通过正则表达式清洗数据，然后导出问答对。该问答对筛选方法可应用于多轮对话问答对提取，已在电影对话数据集上实验。
+   [更多中文对话数据集](https://github.com/candlewill/Dialog_Corpus)
     >  2. 训练数据按长度划分bucket，提高训练速度和推理速度。[code](data_utils.py)
     >  3. 使用多线程生成mini batch的数据，提高数据加载的效率。[code](threadedgenerator.py)
     >  4. 模型使用4层LSTM单元作为编码解码单元[code](seq_2_seq.py)，主要特点：
@@ -23,27 +24,27 @@ A chatbot using modified seq2seq model, based on xiaohuangji corpus.
  ## 模型可优化点：
      > 1. 训练阶段可使用Scheduled sampling，来解决decoder在接收到“未见过的decoder input”时，解码出较差结果的问题。
      > 2. 使用多GPU训练不同的Layer，加速训练。注意使用GNMTAttentionMultiCell, 解码器的每一步就可以在前一步的第一层和 attention 计算完成之后就可以进行解码。
-            '''python
-            cells = []
-            for i in range(num_layers):
-              cells.append(tf.contrib.rnn.DeviceWrapper(
-                  tf.contrib.rnn.LSTMCell(num_units),
-                  "/gpu:%d" % (num_layers % num_gpus)))
-            attention_cell = cells.pop(0)
-            attention_cell = tf.contrib.seq2seq.AttentionWrapper(
-                attention_cell,
-                attention_mechanism,
-                attention_layer_size=None,  # don't add an additional dense layer.
-                output_attention=False,)
-            cell = GNMTAttentionMultiCell(attention_cell, cells)
-            '''
+'''python
+cells = []
+for i in range(num_layers):
+  cells.append(tf.contrib.rnn.DeviceWrapper(
+      tf.contrib.rnn.LSTMCell(num_units),
+      "/gpu:%d" % (num_layers % num_gpus)))
+attention_cell = cells.pop(0)
+attention_cell = tf.contrib.seq2seq.AttentionWrapper(
+    attention_cell,
+    attention_mechanism,
+    attention_layer_size=None,  # don't add an additional dense layer.
+    output_attention=False,)
+cell = GNMTAttentionMultiCell(attention_cell, cells)
+'''
      > 3. 模型在推理阶段的速度可以进一步优化。
 
 ---
 
 ## 模型效果
 [运行的jupyter notebook文件](chatbot.ipynb)
-[pic1](pic/test.png)
-[pic2](pic/test2.png)
+![pic1](pic/test.png)
+![pic2](pic/test2.png)
 
               
