@@ -4,9 +4,9 @@ A chatbot using modified seq2seq model, based on xiaohuangji corpus.
     该模型基于Seq2Seq model，在小黄鸡语料库上训练了200轮左右，经过多次调参，得到相对较好的模型。
 
 ## 模型主要的细节如下：
->  1. 语料按字分词，通过正则表达式清洗数据，然后导出问答对。该问答对筛选方法可应用于多轮对话问答对提取，已在电影对话数据集上实验。[更多中文对话数据集](https://github.com/candlewill/Dialog_Corpus)
->  2. 训练数据按长度划分bucket，提高训练速度和推理速度。[code](data_utils.py)
->  3. 使用多线程生成mini batch的数据，提高数据加载的效率。[code](threadedgenerator.py)
+>  1. 语料按字分词，通过正则表达式清洗数据，然后导出问答对。该问答对筛选方法可应用于多轮对话问答对提取，已在电影对话数据集上实验。[[更多中文对话数据集]](https://github.com/candlewill/Dialog_Corpus)
+>  2. 训练数据按长度划分bucket，提高训练速度和推理速度。[[code]](data_utils.py)
+>  3. 使用多线程生成mini batch的数据，提高数据加载的效率。[[code]](threadedgenerator.py)
 >  4. 模型使用4层LSTM单元作为编码解码单元[[code]](seq_2_seq.py)，主要特点：
           
           - 模型在常规decoder的基础上，增加了一个anti decoder主要计算dummy inputs输入的损失，并将其作为负的loss反向传播，提升模型的泛化能力。
