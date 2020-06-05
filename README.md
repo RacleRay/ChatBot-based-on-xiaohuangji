@@ -48,5 +48,4 @@ A chatbot using modified seq2seq model, based on xiaohuangji corpus.
 ![pic1](pic/test.png)
 ![pic2](pic/test2.png)
 
-              
-模型checkpoint文件比较大，没有上传，可邮件<racleme@outlook.com>
+            
